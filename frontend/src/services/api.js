@@ -6,8 +6,17 @@ import axios from 'axios'
 
 // Create axios instance with base configuration
 // Create axios instance with base configuration
+const getBaseUrl = () => {
+    let url = import.meta.env.VITE_API_URL || '/api'
+    // Ensure URL ends with /api
+    if (!url.endsWith('/api') && !url.endsWith('/api/')) {
+        url = url.replace(/\/$/, '') + '/api'
+    }
+    return url
+}
+
 const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL || '/api',
+    baseURL: getBaseUrl(),
     timeout: 30000,
     headers: {
         'Content-Type': 'application/json',
