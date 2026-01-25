@@ -1,0 +1,130 @@
+.workflow-timeline {
+    padding: 20px 0;
+}
+
+.timeline-container {
+    position: relative;
+    padding-left: 20px;
+    border-left: 2px solid #e5e7eb;
+    margin-top: 20px;
+}
+
+.timeline-item {
+    position: relative;
+    padding-bottom: 30px;
+    padding-left: 20px;
+}
+
+.timeline-item:last-child {
+    padding-bottom: 0;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -27px;
+    /* Adjust based on border-left and marker size */
+    top: 0;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: #fff;
+    border: 3px solid #d1d5db;
+    transition: all 0.3s ease;
+}
+
+.timeline-item.completed .timeline-marker {
+    background-color: #10b981;
+    /* Green */
+    border-color: #10b981;
+}
+
+.timeline-item.active .timeline-marker {
+    background-color: #3b82f6;
+    /* Blue */
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+}
+
+.timeline-item.future .timeline-marker {
+    background-color: #f3f4f6;
+    border-color: #e5e7eb;
+}
+
+.timeline-content {
+    background: #f9fafb;
+    border-radius: 8px;
+    padding: 12px;
+    border: 1px solid #e5e7eb;
+}
+
+.timeline-item.completed .timeline-content {
+    border-color: #a7f3d0;
+    background: #ecfdf5;
+}
+
+.timeline-item.active .timeline-content {
+    border-color: #bfdbfe;
+    background: #eff6ff;
+}
+
+.timeline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.timeline-header h4 {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #1f2937;
+    text-transform: capitalize;
+}
+
+.timeline-date {
+    font-size: 0.8rem;
+    color: #6b7280;
+}
+
+.timeline-details {
+    font-size: 0.85rem;
+    color: #4b5563;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-bottom: 4px;
+    background: #e5e7eb;
+    color: #374151;
+}
+
+.timeline-item.completed .status-badge {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.timeline-item.active .status-badge {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.cost-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+    background: rgba(255, 255, 255, 0.5);
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.remarks {
+    margin-top: 8px;
+    font-style: italic;
+    color: #6b7280;
+}

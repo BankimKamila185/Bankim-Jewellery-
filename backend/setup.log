@@ -1,0 +1,24 @@
+Traceback (most recent call last):
+  File "/Users/bankimkamila/BankimJewellery/backend/scripts/setup_sheets.py", line 173, in <module>
+    asyncio.run(main())
+    ~~~~~~~~~~~^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.0/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 204, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.0/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 127, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.0/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 719, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "/Users/bankimkamila/BankimJewellery/backend/scripts/setup_sheets.py", line 50, in main
+    response = request.execute()
+  File "/Users/bankimkamila/BankimJewellery/backend/venv/lib/python3.14/site-packages/googleapiclient/_helpers.py", line 130, in positional_wrapper
+    return wrapped(*args, **kwargs)
+  File "/Users/bankimkamila/BankimJewellery/backend/venv/lib/python3.14/site-packages/googleapiclient/http.py", line 938, in execute
+    raise HttpError(resp, content, uri=self.uri)
+googleapiclient.errors.HttpError: <HttpError 403 when requesting https://sheets.googleapis.com/v4/spreadsheets?alt=json returned "Google Sheets API has not been used in project 1022731068262 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/sheets.googleapis.com/overview?project=1022731068262 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.". Details: "[{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'SERVICE_DISABLED', 'domain': 'googleapis.com', 'metadata': {'serviceTitle': 'Google Sheets API', 'consumer': 'projects/1022731068262', 'containerInfo': '1022731068262', 'activationUrl': 'https://console.developers.google.com/apis/api/sheets.googleapis.com/overview?project=1022731068262', 'service': 'sheets.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'Google Sheets API has not been used in project 1022731068262 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/sheets.googleapis.com/overview?project=1022731068262 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.'}, {'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Google developers console API activation', 'url': 'https://console.developers.google.com/apis/api/sheets.googleapis.com/overview?project=1022731068262'}]}]">
+🚀 Starting Google Sheets Setup...
+✅ Using credentials: credentials/service_account.json
+
+📄 Creating new Spreadsheet 'BankimJewellery_DB'...
