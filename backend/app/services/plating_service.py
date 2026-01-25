@@ -101,6 +101,7 @@ class PlatingService:
             # Update existing Pending stage
             await self.sheets.update_progress_entry(progress_id, {
                 "assigned_dealer_id": data.dealer_id,
+                "quantity": data.quantity,
                 "status": "InProgress", # Mark as in progress since assigned
                 "start_date": datetime.now().isoformat(),
                 # We don't set final cost yet? Or do we?
@@ -120,7 +121,8 @@ class PlatingService:
                 "design_id": data.design_id,
                 "stage_code": "PLATING",
                 "assigned_dealer_id": data.dealer_id,
-                "quantity": 0, # Should fetch from variant?
+                "assigned_dealer_id": data.dealer_id,
+                "quantity": data.quantity, # Should fetch from variant?
                 "status": "InProgress",
                 "start_date": datetime.now().isoformat(),
                 "cost": cost
@@ -134,7 +136,8 @@ class PlatingService:
             "variant_id": data.variant_id,
             "design_id": data.design_id,
             "dealer_id": data.dealer_id,
-            "plating_type": data.plating_type.value,
+            "quantity": data.quantity,
+            "plating_type": data.plating_type, # Using string value directly might be safer if enum logic changed, but .value is correct for Enum
             "weight_in_kg": data.weight_in_kg,
             "rate_per_kg": rate,
             "calculated_cost": cost,

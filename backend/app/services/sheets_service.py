@@ -116,7 +116,7 @@ class SheetsService:
     
     PLATING_JOB_COLUMNS = [
         "job_id", "progress_id", "variant_id", "design_id", 
-        "dealer_id", "plating_type", "weight_in_kg", "rate_per_kg", 
+        "dealer_id", "quantity", "plating_type", "weight_in_kg", "rate_per_kg", 
         "calculated_cost", "status", "start_date", "end_date", "notes",
         "created_at", "updated_at"
     ]

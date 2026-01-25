@@ -46,6 +46,7 @@ class PlatingAssignment(BaseModel):
     variant_id: str
     design_id: Optional[str] = None
     dealer_id: str
+    quantity: int = Field(..., gt=0)
     plating_type: PlatingType
     weight_in_kg: float = Field(..., gt=0)
     notes: Optional[str] = None
@@ -56,6 +57,7 @@ class PlatingJob(BaseModel):
     progress_id: str
     variant_id: str
     dealer_id: str
+    quantity: int
     plating_type: str
     weight_in_kg: float
     rate_per_kg: float

@@ -56,6 +56,7 @@ export default function Plating() {
         dealer_id: '',
         plating_type: 'B_GOLD',
         custom_type: '',
+        quantity: 0,
         weight_in_kg: 0,
         notes: ''
     })
@@ -107,7 +108,7 @@ export default function Plating() {
             await platingApi.assignJob(payload)
             setShowJobModal(false)
             loadData()
-            setJobForm({ variant_id: '', dealer_id: '', plating_type: 'B_GOLD', weight_in_kg: 0, notes: '' })
+            setJobForm({ variant_id: '', dealer_id: '', plating_type: 'B_GOLD', quantity: 0, weight_in_kg: 0, notes: '' })
         } catch (e) { alert('Failed to assign job') }
     }
 
@@ -153,6 +154,8 @@ export default function Plating() {
                                     <th className="p-4 text-xs font-bold text-gray-500">Variant</th>
                                     <th className="p-4 text-xs font-bold text-gray-500">Vendor</th>
                                     <th className="p-4 text-xs font-bold text-gray-500">Type</th>
+                                    <th className="p-4 text-xs font-bold text-gray-500">Type</th>
+                                    <th className="p-4 text-xs font-bold text-gray-500 text-right">Qty</th>
                                     <th className="p-4 text-xs font-bold text-gray-500 text-right">Weight</th>
                                     <th className="p-4 text-xs font-bold text-gray-500 text-right">Cost</th>
                                     <th className="p-4 text-xs font-bold text-gray-500 text-center">Status</th>
@@ -165,6 +168,7 @@ export default function Plating() {
                                         <td className="p-4">{job.variant_id}</td>
                                         <td className="p-4 text-sm font-medium">{vendors.find(v => v.dealer_id === job.dealer_id)?.name || job.dealer_id}</td>
                                         <td className="p-4"><Badge variant="info">{job.plating_type}</Badge></td>
+                                        <td className="p-4 text-right font-mono">{job.quantity || '-'}</td>
                                         <td className="p-4 text-right font-mono">{job.weight_in_kg} kg</td>
                                         <td className="p-4 text-right font-bold text-gray-700">₹{job.calculated_cost}</td>
                                         <td className="p-4 text-center">
@@ -212,7 +216,7 @@ export default function Plating() {
                         label="Variant"
                         value={jobForm.variant_id}
                         onChange={e => setJobForm({ ...jobForm, variant_id: e.target.value })}
-                        options={[{ value: '', label: 'Select Variant' }, ...variants.map(v => ({ value: v.variant_id, label: `${v.variant_code} (${v.variant_id})` }))]}
+                        options={[{ value: '', label: 'Select Variant' }, ...variants.map(v => ({ value: v.variant_id, label: v.variant_code }))]}
                         required
                     />
                     <Select
@@ -233,6 +237,7 @@ export default function Plating() {
                                 required
                             />
                         )}
+                        <Input label="Quantity" type="number" value={jobForm.quantity} onChange={e => setJobForm({ ...jobForm, quantity: parseInt(e.target.value) })} required />
                         <Input label="Weight (KG)" type="number" step="0.001" value={jobForm.weight_in_kg} onChange={e => setJobForm({ ...jobForm, weight_in_kg: parseFloat(e.target.value) })} required />
                     </div>
                     <Input label="Notes" value={jobForm.notes} onChange={e => setJobForm({ ...jobForm, notes: e.target.value })} />
