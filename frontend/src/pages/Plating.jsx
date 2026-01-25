@@ -154,7 +154,6 @@ export default function Plating() {
                                     <th className="p-4 text-xs font-bold text-gray-500">Variant</th>
                                     <th className="p-4 text-xs font-bold text-gray-500">Vendor</th>
                                     <th className="p-4 text-xs font-bold text-gray-500">Type</th>
-                                    <th className="p-4 text-xs font-bold text-gray-500">Type</th>
                                     <th className="p-4 text-xs font-bold text-gray-500 text-right">Qty</th>
                                     <th className="p-4 text-xs font-bold text-gray-500 text-right">Weight</th>
                                     <th className="p-4 text-xs font-bold text-gray-500 text-right">Cost</th>
@@ -165,8 +164,8 @@ export default function Plating() {
                                 {jobs.map(job => (
                                     <tr key={job.job_id} className="hover:bg-gray-50">
                                         <td className="p-4 font-mono text-xs">{job.job_id}</td>
-                                        <td className="p-4">{job.variant_id}</td>
-                                        <td className="p-4 text-sm font-medium">{vendors.find(v => v.dealer_id === job.dealer_id)?.name || job.dealer_id}</td>
+                                        <td className="p-4 font-medium">{variants.find(v => v.variant_id === job.variant_id)?.variant_code || job.variant_id}</td>
+                                        <td className="p-4 text-sm text-gray-600">{vendors.find(v => v.dealer_id === job.dealer_id)?.name || job.dealer_id}</td>
                                         <td className="p-4"><Badge variant="info">{job.plating_type}</Badge></td>
                                         <td className="p-4 text-right font-mono">{job.quantity || '-'}</td>
                                         <td className="p-4 text-right font-mono">{job.weight_in_kg} kg</td>
