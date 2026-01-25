@@ -16,7 +16,7 @@ import Modal from '../components/common/Modal'
 import Select from '../components/common/Select'
 import Input from '../components/common/Input'
 import Badge from '../components/common/Badge'
-import { api, variantsApi, dealersApi, designsApi } from '../services/api'
+import api, { variantsApi, dealersApi, designsApi } from '../services/api'
 
 // Workflow API Wrapper
 const workflowApi = {

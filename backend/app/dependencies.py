@@ -19,6 +19,7 @@ def get_sheets_service() -> SheetsService:
     return SheetsService(
         credentials_path=settings.GOOGLE_CREDENTIALS_PATH,
         spreadsheet_id=settings.GOOGLE_SPREADSHEET_ID,
+        credentials_json=settings.GOOGLE_CREDENTIALS_JSON
     )
 
 
@@ -31,6 +32,7 @@ def get_drive_service() -> DriveService:
         products_folder_id=settings.DRIVE_PRODUCTS_FOLDER_ID,
         invoices_folder_id=settings.DRIVE_INVOICES_FOLDER_ID,
         specs_folder_id=settings.DRIVE_SPECS_FOLDER_ID,
+        credentials_json=settings.GOOGLE_CREDENTIALS_JSON
     )
 
 

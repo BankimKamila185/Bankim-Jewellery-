@@ -1,0 +1,17 @@
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Secrets
+backend/credentials/
+service_account.json
+*.json
+
+# Node
+node_modules/
+dist/
+.DS_Store

@@ -23,6 +23,7 @@ class DriveService:
         products_folder_id: str = "",
         invoices_folder_id: str = "",
         specs_folder_id: str = "",
+        credentials_json: Optional[str] = None
     ):
         """Initialize the Drive service with credentials."""
         self.products_folder_id = products_folder_id
@@ -30,11 +31,13 @@ class DriveService:
         self.specs_folder_id = specs_folder_id
         self.service = None
         
-        if credentials_path:
+        if credentials_json:
+             self._authenticate_from_json(credentials_json)
+        elif credentials_path:
             self._authenticate(credentials_path)
     
     def _authenticate(self, credentials_path: str):
-        """Authenticate with Google Drive API using service account."""
+        """Authenticate with Google Drive API using service account file."""
         try:
             creds_path = Path(credentials_path)
             if not creds_path.is_absolute():
@@ -53,10 +56,28 @@ class DriveService:
             )
             
             self.service = build("drive", "v3", credentials=credentials)
-            print("✅ Google Drive service authenticated")
+            print("✅ Google Drive service authenticated (File)")
             
         except Exception as e:
             print(f"❌ Failed to authenticate with Google Drive: {e}")
+            self.service = None
+
+    def _authenticate_from_json(self, json_content: str):
+         """Authenticate using JSON string content."""
+         try:
+            import json
+            info = json.loads(json_content)
+            credentials = service_account.Credentials.from_service_account_info(
+                info,
+                scopes=[
+                    "https://www.googleapis.com/auth/drive",
+                    "https://www.googleapis.com/auth/drive.file",
+                ]
+            )
+            self.service = build("drive", "v3", credentials=credentials)
+            print("✅ Google Drive service authenticated (Env Var)")
+         except Exception as e:
+            print(f"❌ Failed to authenticate with Google Drive JSON: {e}")
             self.service = None
     
     async def create_folder(self, name: str, parent_id: Optional[str] = None) -> Optional[str]:

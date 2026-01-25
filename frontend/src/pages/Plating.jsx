@@ -15,7 +15,7 @@ import Input from '../components/common/Input'
 import Select from '../components/common/Select'
 import Modal from '../components/common/Modal'
 import Badge from '../components/common/Badge'
-import { api, dealersApi, variantsApi } from '../services/api'
+import api, { dealersApi, variantsApi } from '../services/api'
 
 // Plating Api wrapper locally if not in api.js
 const platingApi = {

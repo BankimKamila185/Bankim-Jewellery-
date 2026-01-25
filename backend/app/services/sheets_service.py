@@ -121,16 +121,18 @@ class SheetsService:
         "created_at", "updated_at"
     ]
     
-    def __init__(self, credentials_path: str, spreadsheet_id: str):
+    def __init__(self, credentials_path: str, spreadsheet_id: str, credentials_json: Optional[str] = None):
         """Initialize the Sheets service with credentials."""
         self.spreadsheet_id = spreadsheet_id
         self.service = None
         
-        if credentials_path and spreadsheet_id:
+        if credentials_json:
+            self._authenticate_from_json(credentials_json)
+        elif credentials_path and spreadsheet_id:
             self._authenticate(credentials_path)
     
     def _authenticate(self, credentials_path: str):
-        """Authenticate with Google Sheets API using service account."""
+        """Authenticate with Google Sheets API using service account file."""
         try:
             creds_path = Path(credentials_path)
             if not creds_path.is_absolute():
@@ -151,10 +153,28 @@ class SheetsService:
             )
             
             self.service = build("sheets", "v4", credentials=credentials)
-            print("✅ Google Sheets service authenticated")
+            print("✅ Google Sheets service authenticated (File)")
             
         except Exception as e:
             print(f"❌ Failed to authenticate with Google Sheets: {e}")
+            self.service = None
+
+    def _authenticate_from_json(self, json_content: str):
+        """Authenticate using JSON string content."""
+        try:
+            import json
+            info = json.loads(json_content)
+            credentials = service_account.Credentials.from_service_account_info(
+                info,
+                scopes=[
+                    "https://www.googleapis.com/auth/spreadsheets",
+                    "https://www.googleapis.com/auth/drive",
+                ]
+            )
+            self.service = build("sheets", "v4", credentials=credentials)
+            print("✅ Google Sheets service authenticated (Env Var)")
+        except Exception as e:
+            print(f"❌ Failed to authenticate with Google Sheets JSON: {e}")
             self.service = None
     
     def _get_column_index(self, columns: list, field: str) -> int:

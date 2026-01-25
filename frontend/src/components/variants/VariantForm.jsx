@@ -16,7 +16,6 @@ export default function VariantForm({ isOpen, onClose, onSuccess, designId, init
         finishing_cost: 0,
         packing_cost: 0,
         design_cost: 0,
-        design_cost: 0,
         stock_qty: 0,
         notes: '',
     })
@@ -33,7 +32,6 @@ export default function VariantForm({ isOpen, onClose, onSuccess, designId, init
                     finishing_cost: initialData.finishing_cost || 0,
                     packing_cost: initialData.packing_cost || 0,
                     design_cost: initialData.design_cost || 0,
-                    design_cost: initialData.design_cost || 0,
                     stock_qty: initialData.stock_qty || 0,
                     notes: initialData.notes || '',
                 })
@@ -48,7 +46,6 @@ export default function VariantForm({ isOpen, onClose, onSuccess, designId, init
                     making_cost: 0,
                     finishing_cost: 0,
                     packing_cost: 0,
-                    design_cost: 0, // Should ideally come from Design base cost
                     design_cost: 0, // Should ideally come from Design base cost
                     stock_qty: 0,
                     notes: '',

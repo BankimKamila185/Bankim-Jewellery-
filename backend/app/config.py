@@ -26,6 +26,7 @@ class Settings(BaseSettings):
     
     # Google API Settings
     GOOGLE_CREDENTIALS_PATH: str = "credentials/service_account.json"
+    GOOGLE_CREDENTIALS_JSON: str = "" # Full JSON content for deployment
     GOOGLE_SPREADSHEET_ID: str = ""  # Set in .env
     
     # Google Drive Folder IDs (set after creating folders)

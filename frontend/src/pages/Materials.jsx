@@ -50,10 +50,6 @@ export default function Materials() {
         material_id: '',
         quantity: 0,
         unit_price: 0,
-        dealer_id: '',
-        material_id: '',
-        quantity: 0,
-        unit_price: 0,
         purchase_date: new Date().toISOString().split('T')[0],
         bill_number: '',
         notes: ''
