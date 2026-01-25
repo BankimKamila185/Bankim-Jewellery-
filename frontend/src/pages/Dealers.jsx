@@ -55,8 +55,22 @@ export default function Dealers() {
         e.preventDefault()
         setLoading(true)
         try {
-            if (editingDealer) await dealersApi.update(editingDealer.dealer_id, form)
-            else await dealersApi.create(form)
+            // Sanitize payload
+            const payload = { ...form }
+
+            // Fix Email: Pydantic rejects empty strings for EmailStr
+            if (!payload.email) payload.email = null
+
+            // Fix City: Backend doesn't have city field, merge into address
+            if (payload.city) {
+                payload.address = payload.address
+                    ? `${payload.address}, ${payload.city}`
+                    : payload.city
+            }
+            delete payload.city // Remove extra field
+
+            if (editingDealer) await dealersApi.update(editingDealer.dealer_id, payload)
+            else await dealersApi.create(payload)
             setShowModal(false); setForm({}); setEditingDealer(null); loadData()
         } catch (e) {
             console.error(e)
