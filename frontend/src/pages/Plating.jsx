@@ -27,7 +27,7 @@ const platingApi = {
 
 const PLATING_TYPES = [
     { value: 'B_GOLD', label: 'B Gold' },
-    { value: 'LAKE_GOLD', label: 'Lake Gold' },
+    { value: 'LAKER_GOLD', label: 'Laker Gold' },
     { value: 'ROSE_GOLD', label: 'Rose Gold' },
     { value: 'ANTIQUE', label: 'Antique' },
     { value: 'SILVER', label: 'Silver' },
