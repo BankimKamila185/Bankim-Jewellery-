@@ -28,7 +28,12 @@ const platingApi = {
 const PLATING_TYPES = [
     { value: 'B_GOLD', label: 'B Gold' },
     { value: 'LAKE_GOLD', label: 'Lake Gold' },
-    { value: 'OTHER', label: 'Other' }
+    { value: 'ROSE_GOLD', label: 'Rose Gold' },
+    { value: 'ANTIQUE', label: 'Antique' },
+    { value: 'SILVER', label: 'Silver' },
+    { value: 'MATTE_GOLD', label: 'Matte Gold' },
+    { value: 'COPPER', label: 'Copper' },
+    { value: 'OTHER', label: 'Other (Manual Entry)' }
 ]
 
 export default function Plating() {
@@ -50,6 +55,7 @@ export default function Plating() {
         variant_id: '',
         dealer_id: '',
         plating_type: 'B_GOLD',
+        custom_type: '',
         weight_in_kg: 0,
         notes: ''
     })
@@ -92,7 +98,13 @@ export default function Plating() {
     const handleCreateJob = async (e) => {
         e.preventDefault()
         try {
-            await platingApi.assignJob(jobForm)
+            const payload = { ...jobForm }
+            if (payload.plating_type === 'OTHER') {
+                payload.plating_type = payload.custom_type || 'Custom'
+            }
+            delete payload.custom_type
+
+            await platingApi.assignJob(payload)
             setShowJobModal(false)
             loadData()
             setJobForm({ variant_id: '', dealer_id: '', plating_type: 'B_GOLD', weight_in_kg: 0, notes: '' })
@@ -212,6 +224,15 @@ export default function Plating() {
                     />
                     <div className="grid grid-cols-2 gap-4">
                         <Select label="Type" value={jobForm.plating_type} onChange={e => setJobForm({ ...jobForm, plating_type: e.target.value })} options={PLATING_TYPES} />
+                        {jobForm.plating_type === 'OTHER' && (
+                            <Input
+                                label="Custom Type"
+                                placeholder="Enter plating name"
+                                value={jobForm.custom_type}
+                                onChange={e => setJobForm({ ...jobForm, custom_type: e.target.value })}
+                                required
+                            />
+                        )}
                         <Input label="Weight (KG)" type="number" step="0.001" value={jobForm.weight_in_kg} onChange={e => setJobForm({ ...jobForm, weight_in_kg: parseFloat(e.target.value) })} required />
                     </div>
                     <Input label="Notes" value={jobForm.notes} onChange={e => setJobForm({ ...jobForm, notes: e.target.value })} />
