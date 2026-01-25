@@ -5,8 +5,8 @@ Supports both BUY (suppliers) and SELL (customers) dealers.
 
 from datetime import datetime
 from enum import Enum
-from typing import Optional
-from pydantic import BaseModel, Field, EmailStr
+from typing import Optional, Any
+from pydantic import BaseModel, Field, EmailStr, field_validator
 
 
 class DealerType(str, Enum):
@@ -39,7 +39,23 @@ class DealerBase(BaseModel):
     ifsc: Optional[str] = Field(None, max_length=15)
     opening_balance: float = Field(default=0.0, ge=0)
     notes: Optional[str] = Field(None, max_length=1000)
-    status: str = Field(default="Active", pattern="^(Active|Inactive)$")
+    status: str = Field(default="Active", pattern="^(Active|Inactive|Deleted)$")
+
+    @field_validator("email", mode="before")
+    @classmethod
+    def empty_string_to_none(cls, v: Any) -> Any:
+        """Convert empty strings to None for email field."""
+        if v == "" or v is None:
+            return None
+        return v
+    
+    @field_validator("opening_balance", mode="before")
+    @classmethod
+    def empty_balance_to_zero(cls, v: Any) -> float:
+        """Convert empty strings to 0 for balance field."""
+        if v == "" or v is None:
+            return 0.0
+        return float(v)
 
 
 class DealerCreate(DealerBase):
@@ -62,7 +78,15 @@ class DealerUpdate(BaseModel):
     ifsc: Optional[str] = Field(None, max_length=15)
     opening_balance: Optional[float] = Field(None, ge=0)
     notes: Optional[str] = Field(None, max_length=1000)
-    status: Optional[str] = Field(None, pattern="^(Active|Inactive)$")
+    status: Optional[str] = Field(None, pattern="^(Active|Inactive|Deleted)$")
+
+    @field_validator("email", mode="before")
+    @classmethod
+    def empty_string_to_none(cls, v: Any) -> Any:
+        """Convert empty strings to None for email field."""
+        if v == "" or v is None:
+            return None
+        return v
 
 
 class Dealer(DealerBase):
@@ -70,8 +94,16 @@ class Dealer(DealerBase):
     dealer_id: str = Field(..., description="Auto-generated unique ID (DLR-XXXXX)")
     dealer_code: str = Field(..., description="Unique dealer code (MAT-0001, CUS-0001)")
     current_balance: float = Field(default=0.0, description="Calculated current balance")
-    created_at: datetime = Field(default_factory=datetime.now)
-    updated_at: datetime = Field(default_factory=datetime.now)
+    created_at: Optional[str] = None
+    updated_at: Optional[str] = None
+
+    @field_validator("current_balance", mode="before")
+    @classmethod
+    def empty_balance_to_zero(cls, v: Any) -> float:
+        """Convert empty strings to 0 for balance field."""
+        if v == "" or v is None:
+            return 0.0
+        return float(v)
 
     class Config:
         from_attributes = True
@@ -81,3 +113,4 @@ class DealerListResponse(BaseModel):
     """Response model for listing dealers."""
     total: int
     dealers: list[Dealer]
+
