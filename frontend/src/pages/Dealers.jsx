@@ -30,8 +30,8 @@ export default function Dealers() {
 
     const [form, setForm] = useState({
         name: '',
-        type: 'BUY', // BUY/SELL
-        category: 'Material',
+        dealer_type: 'BUY', // BUY/SELL
+        dealer_category: 'Material',
         gstin: '',
         phone: '',
         email: '',
@@ -53,11 +53,17 @@ export default function Dealers() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        setLoading(true)
         try {
             if (editingDealer) await dealersApi.update(editingDealer.dealer_id, form)
             else await dealersApi.create(form)
             setShowModal(false); setForm({}); setEditingDealer(null); loadData()
-        } catch (e) { console.error(e) }
+        } catch (e) {
+            console.error(e)
+            alert('Failed to save contact. Please try again.')
+        } finally {
+            setLoading(false)
+        }
     }
 
     const handleDelete = async (id) => {
@@ -72,7 +78,7 @@ export default function Dealers() {
         setShowModal(true)
     }
 
-    const filteredDealers = dealers.filter(d => d.type === activeTab)
+    const filteredDealers = dealers.filter(d => d.dealer_type === activeTab)
 
     return (
         <div className="space-y-6 animate-enter">
@@ -98,7 +104,7 @@ export default function Dealers() {
                     </button>
                 </div>
 
-                <Button icon={HiPlus} onClick={() => { setEditingDealer(null); setForm({ type: activeTab }); setShowModal(true) }}>
+                <Button icon={HiPlus} onClick={() => { setEditingDealer(null); setForm({ dealer_type: activeTab, dealer_category: 'Material' }); setShowModal(true) }}>
                     Add {activeTab === 'BUY' ? 'Supplier' : 'Customer'}
                 </Button>
             </div>
@@ -169,7 +175,7 @@ export default function Dealers() {
                         </div>
                         <h3 className="font-bold text-[var(--text-primary)]">No {activeTab === 'BUY' ? 'Suppliers' : 'Customers'} Found</h3>
                         <p className="text-[var(--text-secondary)] mb-6">Start building your contact list.</p>
-                        <Button onClick={() => { setForm({ type: activeTab }); setShowModal(true) }} icon={HiPlus}>Add Contact</Button>
+                        <Button onClick={() => { setForm({ dealer_type: activeTab, dealer_category: 'Material' }); setShowModal(true) }} icon={HiPlus}>Add Contact</Button>
                     </div>
                 )}
             </div>
@@ -179,8 +185,8 @@ export default function Dealers() {
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <Input label="Name" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} required />
                     <div className="grid grid-cols-2 gap-4">
-                        <Select label="Type" value={form.type} onChange={e => setForm({ ...form, type: e.target.value })} options={[{ value: 'BUY', label: 'Supplier (Buy)' }, { value: 'SELL', label: 'Customer (Sell)' }]} />
-                        <Select label="Category" value={form.category} onChange={e => setForm({ ...form, category: e.target.value })} options={[
+                        <Select label="Type" value={form.dealer_type} onChange={e => setForm({ ...form, dealer_type: e.target.value })} options={[{ value: 'BUY', label: 'Supplier (Buy)' }, { value: 'SELL', label: 'Customer (Sell)' }]} />
+                        <Select label="Category" value={form.dealer_category} onChange={e => setForm({ ...form, dealer_category: e.target.value })} options={[
                             { value: 'Material', label: 'Material Supplier' },
                             { value: 'Making', label: 'Making Vendor' },
                             { value: 'Plating', label: 'Plating Vendor' },
@@ -198,7 +204,7 @@ export default function Dealers() {
 
                     <div className="flex gap-3 pt-4">
                         <Button type="button" variant="secondary" onClick={() => setShowModal(false)} fullWidth>Cancel</Button>
-                        <Button type="submit" fullWidth>Save Contact</Button>
+                        <Button type="submit" loading={loading} fullWidth>Save Contact</Button>
                     </div>
                 </form>
             </Modal>
