@@ -74,7 +74,8 @@ export default function Dealers() {
             setShowModal(false); setForm({}); setEditingDealer(null); loadData()
         } catch (e) {
             console.error(e)
-            alert('Failed to save contact. Please try again.')
+            const errorMsg = e.response?.data?.detail || e.message || 'Unknown error'
+            alert(`Failed to save contact: ${errorMsg}\n\nCheck console for details.`)
         } finally {
             setLoading(false)
         }
