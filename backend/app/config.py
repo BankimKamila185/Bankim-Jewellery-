@@ -21,8 +21,12 @@ class Settings(BaseSettings):
     HOST: str = "0.0.0.0"
     PORT: int = 8000
     
-    # CORS - Allow all origins for local network access
-    CORS_ORIGINS: list[str] = ["*"]
+    # CORS - Must specify exact origins when allow_credentials=True
+    CORS_ORIGINS: list[str] = [
+        "http://localhost:5173",
+        "http://localhost:3000",
+        "https://bankim-jewellery.vercel.app"
+    ]
     
     # Google API Settings
     GOOGLE_CREDENTIALS_PATH: str = "credentials/service_account.json"
