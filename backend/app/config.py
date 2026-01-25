@@ -6,6 +6,8 @@ Uses environment variables for sensitive data.
 import os
 from pathlib import Path
 from functools import lru_cache
+from typing import Union
+from pydantic import field_validator
 from pydantic_settings import BaseSettings
 
 
@@ -22,11 +24,20 @@ class Settings(BaseSettings):
     PORT: int = 8000
     
     # CORS - Must specify exact origins when allow_credentials=True
+    # Can be set as comma-separated string in env: "http://localhost:5173,https://example.com"
     CORS_ORIGINS: list[str] = [
         "http://localhost:5173",
         "http://localhost:3000",
         "https://bankim-jewellery.vercel.app"
     ]
+    
+    @field_validator("CORS_ORIGINS", mode="before")
+    @classmethod
+    def parse_cors_origins(cls, v: Union[str, list]) -> list:
+        """Parse CORS_ORIGINS from comma-separated string or list."""
+        if isinstance(v, str):
+            return [origin.strip() for origin in v.split(",") if origin.strip()]
+        return v
     
     # Google API Settings
     GOOGLE_CREDENTIALS_PATH: str = "credentials/service_account.json"

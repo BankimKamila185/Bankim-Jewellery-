@@ -3,9 +3,11 @@ FastAPI application entry point.
 Bankim Jewellery Invoice & Product Management System.
 """
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
+import traceback
 
 from app.config import get_settings
 from app.routers import dealers, designers, invoices, ocr, reports, settings as settings_router
@@ -20,6 +22,28 @@ async def lifespan(app: FastAPI):
     settings = get_settings()
     print(f"   Version: {settings.APP_VERSION}")
     print(f"   Debug: {settings.DEBUG}")
+    
+    # Validate Google credentials
+    if settings.GOOGLE_CREDENTIALS_JSON:
+        print("   ✅ GOOGLE_CREDENTIALS_JSON environment variable found")
+    elif settings.GOOGLE_CREDENTIALS_PATH:
+        from pathlib import Path
+        creds_path = Path(settings.GOOGLE_CREDENTIALS_PATH)
+        if not creds_path.is_absolute():
+            creds_path = Path(__file__).resolve().parent.parent / settings.GOOGLE_CREDENTIALS_PATH
+        if creds_path.exists():
+            print(f"   ✅ Credentials file found: {creds_path}")
+        else:
+            print(f"   ⚠️ WARNING: Credentials file not found: {creds_path}")
+            print("   ⚠️ Set GOOGLE_CREDENTIALS_JSON env var for production")
+    else:
+        print("   ⚠️ WARNING: No Google credentials configured!")
+    
+    if not settings.GOOGLE_SPREADSHEET_ID:
+        print("   ⚠️ WARNING: GOOGLE_SPREADSHEET_ID not set!")
+    else:
+        print(f"   ✅ Spreadsheet ID configured")
+    
     yield
     # Shutdown
     print("👋 Shutting down...")
@@ -41,6 +65,22 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+# Global exception handler to ensure CORS headers are included on errors
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    """Handle all uncaught exceptions with proper CORS headers."""
+    print(f"❌ Unhandled exception: {exc}")
+    print(traceback.format_exc())
+    return JSONResponse(
+        status_code=500,
+        content={
+            "detail": str(exc),
+            "error": "Internal Server Error",
+            "hint": "Check server logs for details. If this is a credentials error, ensure GOOGLE_CREDENTIALS_JSON is set.",
+        },
+    )
 
 
 # Include routers
@@ -70,14 +110,24 @@ async def root():
 
 @app.get("/api/health", tags=["Health"])
 async def health_check():
-    """Detailed health check."""
+    """Detailed health check with credential validation."""
+    from app.dependencies import get_sheets_service, get_drive_service
+    
+    settings = get_settings()
+    sheets_service = get_sheets_service()
+    drive_service = get_drive_service()
+    
     return {
         "status": "healthy",
         "services": {
             "api": True,
-            "google_sheets": True,  # Will be checked dynamically
-            "google_drive": True,   # Will be checked dynamically
-            "ocr": True,            # Will be checked dynamically
+            "google_sheets": sheets_service.service is not None,
+            "google_drive": drive_service.service is not None,
+            "credentials_configured": bool(settings.GOOGLE_CREDENTIALS_JSON or settings.GOOGLE_CREDENTIALS_PATH),
+            "spreadsheet_configured": bool(settings.GOOGLE_SPREADSHEET_ID),
+        },
+        "config": {
+            "cors_origins": settings.CORS_ORIGINS,
         }
     }
 

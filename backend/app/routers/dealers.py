@@ -29,6 +29,14 @@ async def list_dealers(
 ):
     """List all dealers with optional filtering."""
     sheets = get_sheets_service()
+    
+    # Check if Google Sheets service is available
+    if not sheets.service:
+        raise HTTPException(
+            status_code=503,
+            detail="Google Sheets service not available. Check server credentials configuration."
+        )
+    
     dealers = await sheets.get_dealers(dealer_type.value if dealer_type else None)
     
     # Additional filtering
