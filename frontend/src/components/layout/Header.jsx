@@ -6,7 +6,7 @@ const pageTitles = {
     '/scan': 'Scan Bill',
     '/invoices': 'Invoices',
     '/products': 'Products',
-    '/designers': 'Designers',
+    '/designers': 'Karigars',
     '/dealers': 'Dealers',
     '/reports': 'Reports',
     '/settings': 'Settings',

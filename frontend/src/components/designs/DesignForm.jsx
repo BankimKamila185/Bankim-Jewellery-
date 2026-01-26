@@ -226,7 +226,7 @@ export default function DesignForm({ isOpen, onClose, onSuccess, initialData = n
 
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Designer
+                            Karigar
                         </label>
                         <select
                             name="designer_id"

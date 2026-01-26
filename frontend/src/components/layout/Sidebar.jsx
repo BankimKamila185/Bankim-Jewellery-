@@ -41,7 +41,7 @@ const menuGroups = [
         title: 'Masters',
         items: [
             { path: '/designs', icon: HiColorSwatch, label: 'Design Catalog' },
-            { path: '/designers', icon: HiUser, label: 'Designers' },
+            { path: '/designers', icon: HiUser, label: 'Karigars' },
             { path: '/reports', icon: HiChartPie, label: 'Reports' },
             { path: '/settings', icon: HiCog, label: 'Settings' },
         ]
@@ -91,8 +91,8 @@ export default function Sidebar({ isOpen, onClose }) {
                                                 to={item.path}
                                                 onClick={() => window.innerWidth < 1024 && onClose()}
                                                 className={`flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${isActive
-                                                        ? 'bg-[var(--color-primary)] text-white shadow-md shadow-indigo-200'
-                                                        : 'text-[var(--text-secondary)] hover:bg-gray-50'
+                                                    ? 'bg-[var(--color-primary)] text-white shadow-md shadow-indigo-200'
+                                                    : 'text-[var(--text-secondary)] hover:bg-gray-50'
                                                     }`}
                                             >
                                                 <Icon className={`w-5 h-5 ${isActive ? 'text-white' : 'text-gray-400'}`} />
