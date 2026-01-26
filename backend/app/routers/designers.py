@@ -65,6 +65,22 @@ async def create_designer(designer: DesignerCreate):
     if not result:
         raise HTTPException(status_code=500, detail="Failed to create designer")
     
+    # Auto-create corresponding dealer record for the Karigar
+    try:
+        dealer_data = {
+            "name": designer_data["name"],
+            "dealer_type": "BUY",  # Supplier
+            "dealer_category": "Karigar",
+            "phone": designer_data.get("phone", ""),
+            "email": designer_data.get("email", None),
+            "status": "Active",
+            "notes": f"Auto-created from Karigar (ID: {result['designer_id']})"
+        }
+        await sheets.create_dealer(dealer_data)
+    except Exception as e:
+        # Log error but don't fail the request since designer was created
+        print(f"Failed to auto-create dealer for karigar: {e}")
+    
     return result
 
 
