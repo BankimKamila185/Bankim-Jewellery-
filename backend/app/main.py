@@ -132,6 +132,31 @@ async def health_check():
     }
 
 
+@app.get("/api/debug/sheets", tags=["Debug"])
+async def debug_sheets():
+    """Debug endpoint to see raw sheet data."""
+    from app.dependencies import get_sheets_service
+    
+    sheets = get_sheets_service()
+    if not sheets.service:
+        return {"error": "Sheets service not available"}
+    
+    try:
+        # Get raw data from Dealers sheet
+        result = sheets.service.spreadsheets().values().get(
+            spreadsheetId=sheets.spreadsheet_id,
+            range="Dealers!A1:Z10",  # First 10 rows including header
+        ).execute()
+        
+        return {
+            "spreadsheet_id": sheets.spreadsheet_id,
+            "range": result.get("range"),
+            "values": result.get("values", []),
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+
 if __name__ == "__main__":
     import uvicorn
     settings = get_settings()

@@ -362,17 +362,13 @@ class SheetsService:
     
     async def get_dealers(self, dealer_type: Optional[str] = None) -> list[dict]:
         """Get all dealers, optionally filtered by type."""
+        # Get all rows without status filter - let the router handle filtering
+        rows = await self.get_all_rows(self.SHEETS["dealers"], self.DEALER_COLUMNS)
+        
         if dealer_type:
-            return await self.filter_rows(
-                self.SHEETS["dealers"],
-                self.DEALER_COLUMNS,
-                {"dealer_type": dealer_type, "status": "Active"}
-            )
-        return await self.filter_rows(
-            self.SHEETS["dealers"],
-            self.DEALER_COLUMNS,
-            {"status": "Active"}
-        )
+            rows = [r for r in rows if r.get("dealer_type") == dealer_type]
+        
+        return rows
     
     async def get_dealer(self, dealer_id: str) -> Optional[dict]:
         """Get a dealer by ID."""
