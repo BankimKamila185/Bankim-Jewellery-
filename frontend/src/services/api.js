@@ -133,6 +133,13 @@ export const designsApi = {
     update: (id, data) => api.put(`/designs/${id}`, data),
     delete: (id) => api.delete(`/designs/${id}`),
     getVariants: (id) => api.get(`/designs/${id}/variants`),
+    uploadImage: (id, file) => {
+        const formData = new FormData()
+        formData.append('image', file)
+        return api.post(`/designs/${id}/upload`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        })
+    },
 }
 
 // ============ Variants API ============

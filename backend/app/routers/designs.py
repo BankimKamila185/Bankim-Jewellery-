@@ -122,3 +122,70 @@ async def list_design_variants(
         
     variants = await sheets.get_variants(design_id=design_id)
     return variants
+
+
+from fastapi import File, UploadFile
+from app.dependencies import get_drive_service
+from app.services.drive_service import DriveService
+
+
+@router.post("/{design_id}/upload")
+async def upload_design_image(
+    design_id: str,
+    image: UploadFile = File(..., description="Product image file"),
+    sheets: SheetsService = Depends(get_sheets_service),
+    drive: DriveService = Depends(get_drive_service),
+):
+    """Upload an image for a design.
+    
+    Uploads the image to Google Drive and updates the design with the image link.
+    Accepts JPEG, PNG, and WebP images up to 10MB.
+    """
+    # Verify design exists
+    design = await sheets.get_design(design_id)
+    if not design:
+        raise HTTPException(status_code=404, detail="Design not found")
+    
+    # Check drive service
+    if not drive.service:
+        raise HTTPException(status_code=503, detail="Google Drive service not available")
+    
+    # Validate file type
+    allowed_types = ["image/jpeg", "image/png", "image/webp"]
+    if image.content_type not in allowed_types:
+        raise HTTPException(
+            status_code=400, 
+            detail=f"Invalid file type. Allowed: {', '.join(allowed_types)}"
+        )
+    
+    # Read file content
+    content = await image.read()
+    
+    # Validate file size (10MB max)
+    if len(content) > 10 * 1024 * 1024:
+        raise HTTPException(status_code=400, detail="File too large. Maximum size is 10MB")
+    
+    # Upload to Google Drive
+    image_link = await drive.upload_product_image(
+        product_id=design_id,
+        file_content=content,
+        filename=image.filename or f"{design_id}.jpg",
+        mime_type=image.content_type,
+    )
+    
+    if not image_link:
+        raise HTTPException(status_code=500, detail="Failed to upload image to Google Drive")
+    
+    # Update design with image link
+    success = await sheets.update_design(design_id, {"image_drive_link": image_link})
+    
+    if not success:
+        raise HTTPException(status_code=500, detail="Image uploaded but failed to update design record")
+    
+    return {
+        "message": "Image uploaded successfully",
+        "image_url": image_link,
+        "design_id": design_id,
+    }
+
+
