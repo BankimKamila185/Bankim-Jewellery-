@@ -7,6 +7,11 @@ import axios from 'axios'
 // Create axios instance with base configuration
 // Create axios instance with base configuration
 const getBaseUrl = () => {
+    // In development, prefer localhost if env vars are stale or missing
+    if (import.meta.env.DEV && !import.meta.env.VITE_API_URL) {
+        return 'http://localhost:8000/api'
+    }
+
     let url = import.meta.env.VITE_API_URL || '/api'
     // Ensure URL ends with /api
     if (!url.endsWith('/api') && !url.endsWith('/api/')) {
