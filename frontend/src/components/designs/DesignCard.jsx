@@ -25,11 +25,11 @@ export default function DesignCard({ design }) {
 
                 <div className="p-4">
                     <h3 className="font-semibold text-gray-900 truncate">{design.name}</h3>
-                    <p className="text-xs text-gray-500 mt-1">{design.design_id}</p>
+                    <p className="text-xs text-gray-500 mt-1">{design.product_code || design.design_id}</p>
 
                     <div className="mt-4 pt-3 border-t border-gray-50 flex justify-between items-center text-sm">
-                        <span className="text-gray-500">Base Cost</span>
-                        <span className="font-medium text-gray-900">₹{design.base_design_cost?.toLocaleString()}</span>
+                        <span className="text-gray-500">Labour Cost</span>
+                        <span className="font-medium text-gray-900">₹{design.base_design_cost?.toLocaleString() || 0}</span>
                     </div>
                 </div>
             </div>

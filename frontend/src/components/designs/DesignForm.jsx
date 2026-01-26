@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { designsApi, designersApi } from '../../services/api'
-import { X, Upload, Image as ImageIcon, Loader2 } from 'lucide-react'
+import { X, Image as ImageIcon, Loader2 } from 'lucide-react'
 
 export default function DesignForm({ isOpen, onClose, onSuccess, initialData = null }) {
     const [loading, setLoading] = useState(false)
@@ -12,10 +12,10 @@ export default function DesignForm({ isOpen, onClose, onSuccess, initialData = n
 
     const [formData, setFormData] = useState({
         name: '',
+        product_code: '',
         category: '',
         designer_id: '',
         base_design_cost: 0,
-        notes: '',
     })
 
     useEffect(() => {
@@ -24,10 +24,10 @@ export default function DesignForm({ isOpen, onClose, onSuccess, initialData = n
             if (initialData) {
                 setFormData({
                     name: initialData.name,
+                    product_code: initialData.product_code || '',
                     category: initialData.category,
                     designer_id: initialData.designer_id || '',
                     base_design_cost: initialData.base_design_cost || 0,
-                    notes: initialData.notes || '',
                 })
                 // Show existing image if available
                 if (initialData.image_drive_link) {
@@ -36,10 +36,10 @@ export default function DesignForm({ isOpen, onClose, onSuccess, initialData = n
             } else {
                 setFormData({
                     name: '',
+                    product_code: '',
                     category: '',
                     designer_id: '',
                     base_design_cost: 0,
-                    notes: '',
                 })
                 setImagePreview(null)
                 setSelectedFile(null)
@@ -197,25 +197,31 @@ export default function DesignForm({ isOpen, onClose, onSuccess, initialData = n
 
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Product Code
+                        </label>
+                        <input
+                            type="text"
+                            name="product_code"
+                            value={formData.product_code}
+                            onChange={handleChange}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                            placeholder="e.g. BJ-NK-001"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
                             Category *
                         </label>
-                        <select
+                        <input
+                            type="text"
                             name="category"
                             required
                             value={formData.category}
                             onChange={handleChange}
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                        >
-                            <option value="">Select Category</option>
-                            <option value="Necklace">Necklace</option>
-                            <option value="Bangles">Bangles</option>
-                            <option value="Earrings">Earrings</option>
-                            <option value="Rings">Rings</option>
-                            <option value="Pendants">Pendants</option>
-                            <option value="Chains">Chains</option>
-                            <option value="Mukut">Mukut</option>
-                            <option value="Other">Other</option>
-                        </select>
+                            placeholder="e.g. Necklace, Bangles, Earrings"
+                        />
                     </div>
 
                     <div>
@@ -239,7 +245,7 @@ export default function DesignForm({ isOpen, onClose, onSuccess, initialData = n
 
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Base Design Cost (₹)
+                            Labour Cost (₹)
                         </label>
                         <input
                             type="number"
@@ -250,22 +256,6 @@ export default function DesignForm({ isOpen, onClose, onSuccess, initialData = n
                             onChange={handleChange}
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                         />
-                        <p className="text-xs text-gray-500 mt-1">
-                            This cost will be applied as default to new variants.
-                        </p>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Notes
-                        </label>
-                        <textarea
-                            name="notes"
-                            rows="3"
-                            value={formData.notes}
-                            onChange={handleChange}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                        ></textarea>
                     </div>
 
                     <div className="pt-4 flex gap-3">
