@@ -203,7 +203,7 @@ export default function Dealers() {
                         <Select label="Type" value={form.dealer_type} onChange={e => setForm({ ...form, dealer_type: e.target.value })} options={[{ value: 'BUY', label: 'Supplier (Buy)' }, { value: 'SELL', label: 'Customer (Sell)' }]} />
                         <Select label="Category" value={form.dealer_category} onChange={e => setForm({ ...form, dealer_category: e.target.value })} options={[
                             { value: 'Material', label: 'Material Supplier' },
-                            { value: 'Making', label: 'Making Vendor' },
+                            { value: 'Making', label: 'Karigar' },
                             { value: 'Plating', label: 'Plating Vendor' },
                             { value: 'Packing', label: 'Packing Vendor' },
                             { value: 'Customer', label: 'Customer' }
