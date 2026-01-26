@@ -19,6 +19,7 @@ class DealerCategory(str, Enum):
     """Categories for BUY dealers."""
     MATERIAL = "Material"      # Raw material suppliers
     MAKING = "Making"          # Labour/making vendors
+    KARIGAR = "Karigar"        # Skilled artisans (auto-synced)
     PLATING = "Plating"        # Gold/silver plating
     PACKING = "Packing"        # Packing vendors
     CUSTOMER = "Customer"      # For SELL dealers
