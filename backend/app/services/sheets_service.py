@@ -121,10 +121,11 @@ class SheetsService:
         "created_at", "updated_at"
     ]
     
-    def __init__(self, credentials_path: str, spreadsheet_id: str, credentials_json: Optional[str] = None):
+    def __init__(self, credentials_path: str, spreadsheet_id: str, credentials_json: Optional[str] = None, cache_service=None):
         """Initialize the Sheets service with credentials."""
         self.spreadsheet_id = spreadsheet_id
         self.service = None
+        self.cache = cache_service  # Inject cache service
         
         if credentials_json:
             self._authenticate_from_json(credentials_json)
@@ -199,9 +200,15 @@ class SheetsService:
         return [data.get(col, "") for col in columns]
     
     async def get_all_rows(self, sheet_name: str, columns: list) -> list[dict]:
-        """Get all rows from a sheet as dictionaries."""
+        """Get all rows from a sheet as dictionaries (cached)."""
         if not self.service:
             return []
+        
+        # Check cache first
+        if self.cache:
+            cached_data = self.cache.get("sheets", sheet_name)
+            if cached_data is not None:
+                return cached_data
         
         try:
             result = self.service.spreadsheets().values().get(
@@ -210,7 +217,13 @@ class SheetsService:
             ).execute()
             
             rows = result.get("values", [])
-            return [self._row_to_dict(row, columns) for row in rows]
+            data = [self._row_to_dict(row, columns) for row in rows]
+            
+            # Store in cache
+            if self.cache:
+                self.cache.set("sheets", sheet_name, data)
+            
+            return data
             
         except HttpError as e:
             print(f"Error reading from {sheet_name}: {e}")
@@ -241,6 +254,10 @@ class SheetsService:
                 insertDataOption="INSERT_ROWS",
                 body={"values": [row]},
             ).execute()
+            
+            # Invalidate cache for this sheet
+            if self.cache:
+                self.cache.delete("sheets", sheet_name)
             
             return True
             
@@ -293,6 +310,10 @@ class SheetsService:
                 valueInputOption="USER_ENTERED",
                 body={"values": [row]},
             ).execute()
+            
+            # Invalidate cache for this sheet
+            if self.cache:
+                self.cache.delete("sheets", sheet_name)
             
             return True
             

@@ -31,10 +31,8 @@ const api = axios.create({
 // Request interceptor
 api.interceptors.request.use(
     (config) => {
-        // Add timestamp to prevent caching
-        if (config.method === 'get') {
-            config.params = { ...config.params, _t: Date.now() }
-        }
+        // Removed anti-caching timestamp to enable server-side caching
+        // The backend now handles caching with TTL-based invalidation
         return config
     },
     (error) => {
@@ -201,6 +199,15 @@ export const platingApi = {
     getJobs: (dealerId) => api.get('/plating/jobs', { params: { dealer_id: dealerId } }),
     assignJob: (data) => api.post('/plating/assign', data),
     completeJob: (jobId) => api.post(`/plating/complete/${jobId}`),
+}
+
+// ============ Cache API ============
+
+export const cacheApi = {
+    getStats: () => api.get('/cache/stats'),
+    clearAll: () => api.post('/cache/clear'),
+    clearSheet: (sheetName) => api.post(`/cache/clear/${sheetName}`),
+    refresh: () => api.post('/cache/refresh'),
 }
 
 export default api

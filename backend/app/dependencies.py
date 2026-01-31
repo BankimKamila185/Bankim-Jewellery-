@@ -10,16 +10,25 @@ from app.config import get_settings, Settings
 from app.services.sheets_service import SheetsService
 from app.services.drive_service import DriveService
 from app.services.ocr_service import OCRService
+from app.services.cache_service import CacheService
+
+
+@lru_cache()
+def get_cache_service() -> CacheService:
+    """Get cached CacheService instance."""
+    return CacheService(default_ttl=300, max_size=1000)
 
 
 @lru_cache()
 def get_sheets_service() -> SheetsService:
     """Get cached Google Sheets service instance."""
     settings = get_settings()
+    cache = get_cache_service()
     return SheetsService(
         credentials_path=settings.GOOGLE_CREDENTIALS_PATH,
         spreadsheet_id=settings.GOOGLE_SPREADSHEET_ID,
-        credentials_json=settings.GOOGLE_CREDENTIALS_JSON
+        credentials_json=settings.GOOGLE_CREDENTIALS_JSON,
+        cache_service=cache
     )
 
 
@@ -50,3 +59,4 @@ def get_ocr_service() -> OCRService:
 SheetsServiceDep = Depends(get_sheets_service)
 DriveServiceDep = Depends(get_drive_service)
 OCRServiceDep = Depends(get_ocr_service)
+CacheServiceDep = Depends(get_cache_service)

@@ -10,8 +10,10 @@ from app.routers import (
     materials, 
     plating, 
     progress,
+    payments,
     invoices, 
     ocr, 
     reports, 
-    settings
+    settings,
+    cache
 )

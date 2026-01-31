@@ -11,7 +11,7 @@ import traceback
 
 from app.config import get_settings
 from app.routers import dealers, designers, invoices, ocr, reports, settings as settings_router
-from app.routers import designs, variants, progress, payments, plating, materials
+from app.routers import designs, variants, progress, payments, plating, materials, cache
 
 
 @asynccontextmanager
@@ -96,6 +96,7 @@ app.include_router(invoices.router, prefix="/api/invoices", tags=["Invoices"])
 app.include_router(ocr.router, prefix="/api/ocr", tags=["OCR"])
 app.include_router(reports.router, prefix="/api/reports", tags=["Reports"])
 app.include_router(settings_router.router, prefix="/api/settings", tags=["Settings"])
+app.include_router(cache.router, prefix="/api/cache", tags=["Cache"])
 
 
 @app.get("/", tags=["Health"])
